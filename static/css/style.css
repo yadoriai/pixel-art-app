@@ -1,0 +1,343 @@
+:root {
+  --color-bg: #7ebeab;      /* 全体背景 */
+  --color-header: #a8ffd3;  /* ヘッダー */
+  --color-panel: #eef7f3;   /* サイドバーやカードの背景 */
+  --color-border: #9ad9bd;
+  --color-accent: #3f7f63;  /* ボタンの線や文字色のベース */
+  --color-accent-soft: #c1f3da; /* hover時など */
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* ヘッダー */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: var(--color-header);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* ボタンのかたまり */
+.header-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+/* 1段ぶん（ボタン2個横並び） */
+.header-row {
+  display: flex;
+  gap: 8px;
+}
+
+/* PCでは  [Undo Redo] [Save Reset] が1行に並ぶ */
+.header-row + .header-row {
+  margin-left: 4px;
+}
+
+/* スマホ（幅が狭いとき）は上下2段にする */
+@media (max-width: 600px) {
+  .app-header {
+    align-items: flex-start;
+  }
+
+  .header-buttons {
+    flex-direction: column;  /* 上下2段に */
+    gap: 4px;
+  }
+
+  .header-row + .header-row {
+    margin-left: 0;          /* 左の余白は消す */
+  }
+}
+
+
+.app-header h1 {
+  margin: 0;
+  font-family: "x12y16pxMaruMonica", "DotGothic16",
+               system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 28px;
+  letter-spacing: 0.08em;
+  color: #798a84;
+}
+
+.tool-section h2,
+.color-slots-section h2,
+.color-picker-section h2 {
+  display: none;
+}
+
+/* 自前のドットフォント */
+@font-face {
+  font-family: "x12y16pxMaruMonica";
+  src: url("../fonts/x12y16pxMaruMonica.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.header-buttons button {
+  margin-left: 8px;
+}
+
+.icon-button {
+  border: none;
+  background: #ffffff;
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 1px #ddd;
+  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+}
+
+/* hover は「ちょっとだけ」 */
+.icon-button:hover {
+  background: #f3f3f3;
+}
+
+.icon-button:active {
+  transform: translateY(1px);
+}
+
+/* Lucide アイコンの基本スタイル */
+.icon-button .lucide {
+  width: 20px;
+  height: 20px;
+  stroke: #333;
+}
+
+/* ★選択中ツール★ */
+.icon-button.tool-active {
+  background: #e0e0e0;
+  box-shadow: 0 0 0 2px #b0b0b0;
+}
+
+.icon-button.tool-active .lucide {
+  stroke: #555555;
+}
+
+/* ペン／消しゴムの並び */
+.tool-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+
+
+/* メインエリア: モバイルでは縦並び */
+.app-main {
+  display: flex;
+  flex-direction: column;   /* モバイル: 上下 */
+  padding: 8px;
+  gap: 12px;
+}
+
+/* キャンバスは横幅いっぱいで中央寄せ */
+.canvas-area {
+  display: flex;
+  justify-content: center;  /* 真ん中寄せ */
+}
+
+/* キャンバス2枚を重ねる箱 */
+.canvas-wrapper {
+  position: relative;
+  width: 512px;   /* ★ここで幅を固定する */
+  height: 512px;  /* 高さも固定 */
+  background: #ffffff;
+  border: 1px solid #ccc;
+}
+
+/* 2枚のキャンバスをぴったり重ねる */
+#pixel-canvas,
+#grid-canvas {
+  position: absolute;
+  inset: 0;          /* top:0; right:0; bottom:0; left:0; と同じ */
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+/* グリッド用キャンバスはマウスイベントを受けない */
+#grid-canvas {
+  pointer-events: none;
+}
+
+.main-layout {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 16px;
+  padding: 16px;
+}
+
+/* キャンバスの箱 */
+.canvas-wrapper {
+  position: relative;
+  width: 512px;
+  height: 512px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  border: 1px solid rgba(255,255,255,0.8);
+}
+
+/* サイドバー全体 */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 各パネルをカード風に */
+.tool-section,
+.color-slots-section,
+.color-picker-section {
+  background: var(--color-panel);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  padding: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.icon-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--color-accent);
+  background: #ffffff;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.05s;
+}
+
+.icon-button:hover {
+  background: var(--color-accent-soft);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+
+.icon-button:active {
+  transform: translateY(1px);
+}
+
+/* ツールがアクティブな時 */
+.tool-active {
+  background: var(--color-accent-soft);
+  box-shadow: inset 0 0 0 2px var(--color-accent);
+}
+
+/* スマホなど幅が狭いときだけ、縮小表示にする */
+@media (max-width: 600px) {
+  .canvas-wrapper {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+}
+
+
+#pixel-canvas {
+  image-rendering: pixelated;  /* ドットをくっきり表示 */
+  max-width: 100%;             /* スマホでは画面幅に合わせる */
+  height: auto;
+  background: #ffffff;
+  border: 1px solid #ccc;
+}
+
+/* サイドバー（モバイルでは下に表示される） */
+/* サイドバー全体 */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* セクションの箱 */
+.tool-section,
+.color-slots-section,
+.color-picker-section {
+  background: #ffffff;
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+/* 色スロットの並び */
+.color-slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* 色スロット1個分 */
+.color-slot {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* 色が空のときの模様（斜線入りっぽく） */
+.color-slot.empty {
+  background-image: linear-gradient(45deg, #eee 25%, transparent 25%,
+                                    transparent 50%, #eee 50%, #eee 75%,
+                                    transparent 75%, transparent);
+  background-size: 6px 6px;
+}
+
+/* 選択中スロットの枠を少し太くしてもいい */
+.color-slot.selected {
+  box-shadow: 0 0 0 2px #4a90e2;
+}
+
+/* セクションごとの枠＋区切り線（改善案3） */
+.tool-section,
+.color-slots-section,
+.color-picker-section {
+  background: #ffffff;
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+/* キャンバス上でのスクロール・ズームを無効化して描きやすくする */
+#pixel-canvas,
+#grid-canvas {
+  touch-action: none;
+}
+
+/* PC向けレイアウト: 横並びにして右サイドバー */
+@media (min-width: 768px) {
+  .app-main {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;   /* 横方向の中央寄せ */
+    max-width: 900px;          /* 全体の幅を制限 */
+    margin: 0 auto;            /* 画面の中央に配置 */
+    gap: 24px;
+  }
+
+  .canvas-area {
+    flex: 0 0 auto;
+  }
+
+  .sidebar {
+    flex: 0 0 260px;           /* サイドバーの幅をある程度固定 */
+  }
+
+  #pixel-canvas {
+    width: 512px;
+    height: 512px;
+  }
+}
+

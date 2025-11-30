@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>pixel art app</title>
+
+  <!-- ドット系フォント（フォールバック用） -->
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+  <header class="app-header">
+    <h1>pixel art app</h1>
+
+    <div class="header-buttons">
+      <!-- 1段目: Undo / Redo -->
+      <div class="header-row">
+        <button id="undo-btn" class="icon-button" aria-label="元に戻す">
+          <i data-lucide="undo-2"></i>
+        </button>
+        <button id="redo-btn" class="icon-button" aria-label="やり直す">
+          <i data-lucide="redo-2"></i>
+        </button>
+      </div>
+
+      <!-- 2段目: Save / Reset -->
+      <div class="header-row">
+        <button id="save-btn" class="icon-button" aria-label="保存">
+          <i data-lucide="save"></i>
+        </button>
+        <button id="reset-btn" class="icon-button" aria-label="リセット">
+          <i data-lucide="rotate-ccw"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+
+  <main class="app-main">
+    <!-- 左側: キャンバスエリア（モバイルでは上） -->
+    <section class="canvas-area">
+      <div class="canvas-wrapper">
+        <!-- 実際のドットを描くキャンバス -->
+        <canvas id="pixel-canvas" width="512" height="512"></canvas>
+        <!-- グリッドだけ描くキャンバス（保存には使わない） -->
+        <canvas id="grid-canvas" width="512" height="512"></canvas>
+      </div>
+    </section>
+
+
+    <!-- 右側: サイドバー（モバイルでは下に回り込む） -->
+    <aside class="sidebar">
+      <div class="tool-section">
+        <div class="tool-buttons">
+          <button
+            type="button"
+            id="pen-tool"
+            class="icon-button"
+            aria-label="ペン"
+          >
+            <i data-lucide="pen-line"></i>
+          </button>
+
+          <button
+            type="button"
+            id="eraser-tool"
+            class="icon-button"
+            aria-label="消しゴム"
+          >
+            <i data-lucide="eraser"></i>
+          </button>
+
+          <!-- ★ 範囲塗りつぶしツール -->
+          <button
+            type="button"
+            id="rect-tool"
+            class="icon-button"
+            aria-label="範囲塗りつぶし"
+          >
+            <i data-lucide="box-select"></i>
+          </button>
+        </div>
+      </div>
+
+
+      <!-- 色スロット -->
+      <div class="color-slots-section">
+        <div class="color-slots" id="color-slots">
+          <!-- JSで中身を生成する -->
+        </div>
+      </div>
+
+      <!-- 色相環 -->
+      <div class="color-picker-section">
+        <div id="color-wheel-container"></div>
+      </div>
+    </aside>
+  </main>
+
+    <!-- iro.js (color picker) -->
+  <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+
+  <!-- 自分のJS -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+  <!-- Lucide アイコン -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
